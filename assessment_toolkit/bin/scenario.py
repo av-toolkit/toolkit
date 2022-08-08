@@ -1,9 +1,10 @@
-
+import sys
 #TODO when not in development change from .mock_follow_vehicle => .follow_vehicle
 
 #Can only be imported on the system with carla. 
-from assessment_toolkit import ScenarioFollowVehicle
-from assessment_toolkit import ScenarioPedestrianCrossing
+sys.path.append("../scenarios")
+from follow_vehicle.bin.follow_vehicle import ScenarioFollowVehicle
+from pedestrian_crossing.bin.pedestrian_crossing import ScenarioPedestrianCrossing
 #Import a mock scenario 
 #from .mock_follow_vehicle import ScenarioFollowVehicle
 

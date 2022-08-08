@@ -176,7 +176,7 @@ def view_start_autoware(gui):
 
         [sg.Text("Step (3)")],
         [sg.Text("Wait for the docker container to load in : Carla Autoware Terminal.\n")],
-        [sg.Image(str(pathlib.Path(__file__).parent.resolve())+r'/img/carla_autoware_docker_loaded.png')],
+        #[sg.Image(str(pathlib.Path(__file__).parent.resolve())+r'/img/carla_autoware_docker_loaded.png')],
         [sg.Text("")],
         [sg.Button('(CONFIRM) Step(3) is complete', size=(100, 2))],
         [sg.Text('Warning. Do not click button above until docker has loaded (will cause errors)', font=("courier 10 pitch", 14))],
@@ -237,7 +237,7 @@ def view_metamorphic_test_state_page(gui, scenario):
         # [sg.Text("ENTER COMMAND:\n\n./Documents/run-simulation.sh\n\n\n")],    
         [sg.Text("Step (2)")],
         [sg.Text("Wait for 'RVIZ' to load scenario : "+ scenario +"\n")],
-        [sg.Image(str(pathlib.Path(__file__).parent.resolve())+r'/img/scenarios/'+scenario+'/rviz.png')],
+        [sg.Image('./lib/img/scenarios/'+scenario+'/rviz.png')],
         
         [sg.Text("")],
         [sg.Text("If the RVIS loads with errors or does not load within 1 minute", font=("courier 10 pitch", 12))],

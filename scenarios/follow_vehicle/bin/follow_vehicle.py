@@ -6,9 +6,9 @@ import time
 import argparse
 import math
 import json
-from backend.scenario.stats_recorder import StatsRecorder
-from backend.util.results.process_results import ProcessResult
-from .weather import get_weather_parameters
+sys.path.append("../../../assessment_toolkit")
+from bin.stats_recorder import StatsRecorder
+from bin.weather import get_weather_parameters
 CWD = os.getcwd() 
 
 
@@ -28,7 +28,7 @@ import carla
 import subprocess
 import pathlib
 
-from ..util.util import *
+from bin.util import *
 
 
 
@@ -76,7 +76,8 @@ class ScenarioFollowVehicle:
     ego_vehicle = None
 
     #Metamorphic Tests
-    metamorphic_test_target_file = open("$TOOLKIT_ROOT/scenarios/follow_vehicle/etc/follow_vehicle.json")
+    
+    metamorphic_test_target_file = open("../scenarios/follow_vehicle/lib/follow_vehicle.json")
     metamorphic_tests = json.loads(metamorphic_test_target_file.read())
     metamorphic_test_running = False
 
@@ -233,9 +234,9 @@ class ScenarioFollowVehicle:
     def start_recording_scenario(self):
         
         if os.name == 'nt':
-            subprocess.Popen(args=['python', str(pathlib.Path(__file__).parent.resolve())+r'\record_stats.py'], stdout=sys.stdout)
+            subprocess.Popen(args=['python $TOOLKIT_ROOT/assessment_toolkit/bin/record_stats.py'], stdout=sys.stdout)
         else:
-            subprocess.Popen(args=['python', str(pathlib.Path(__file__).parent.resolve())+r'/record_stats.py'], stdout=sys.stdout)
+            subprocess.Popen(args=['python $TOOLKIT_ROOT/assessment_toolkit/bin/record_stats.py'], stdout=sys.stdout)
         
 
     def is_scenario_finished(self):
@@ -298,13 +299,13 @@ class ScenarioFollowVehicle:
   
         #This is where the Real scenario begins. Time to start recording stats. 
         results_file_name = 'follow_vehicle_' + str(self.get_current_metamorphic_test_index())    
-        results_file_path = CWD + "/backend/scenario/results/"+results_file_name+".txt"
+        results_file_path = '$TOOLKIT_ROOT/results/'+results_file_name+'.txt'
         stats_recorder = StatsRecorder(world, self.RUNNING_TIME)
         stats_recorder.record_stats('ego_vehicle', 'stationary_vehicle', results_file_path)
 
 
     def run_patch(self):
-        subprocess.Popen("docker ps | grep -Eo '([0-9]|[a-z]){12}' | xargs -I %% docker cp $TOOLKIT_ROOT/scenarios/follow_vehicle/etc/follow_vehicle.sh %%:/home/autoware/Documents", stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+        subprocess.Popen("docker ps | grep -Eo '([0-9]|[a-z]){12}' | xargs -I %% docker cp $TOOLKIT_ROOT/scenarios/follow_vehicle/lib/follow_vehicle.sh %%:/home/autoware/Documents", stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
         subprocess.Popen("docker ps | grep -Eo '([0-9]|[a-z]){12}' | xargs -I %% docker exec --user autoware -i %% bash /home/autoware/Documents/follow_vehicle.sh", stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
         subprocess.Popen("docker ps | grep -Eo '([0-9]|[a-z]){12}' | xargs -I %% docker exec %% chmod +x /home/autoware/Documents/follow_vehicle.sh", stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
         subprocess.Popen("docker ps | grep -Eo '([0-9]|[a-z]){12}' | xargs -I %% docker exec --user autoware -i %% /home/autoware/Documents/follow_vehicle.sh", stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)

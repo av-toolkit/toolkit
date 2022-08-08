@@ -3,12 +3,14 @@ import os
 import subprocess
 import signal
 import PySimpleGUI as sg
+import sys
 
-from backend.interface import carla_simulator as cs
-from backend.interface import carla_autoware as ca
-from backend.interface import carla_autoware_patch as cap
-from backend.interface import roslaunch as ros
-from backend.scenario import follow_vehicle as fv
+from bin import carla_simulator as cs
+from bin import carla_autoware as ca
+from bin import carla_autoware_patch as cap
+from bin import roslaunch as ros
+sys.path.append("../scenarios")
+from follow_vehicle.bin import follow_vehicle as fv
 
 # Tool-kit
 carla_simulator = cs.CarlaSimulator()

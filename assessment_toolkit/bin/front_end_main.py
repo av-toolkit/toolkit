@@ -32,7 +32,7 @@ class FrontEndMain():
         layout = view_container(self)
 
         directory = os.getcwd() 
-        icon=base64.b64encode(open(directory+"/frontend/img/app-icon.png", 'rb').read())
+        icon=base64.b64encode(open("./lib/img/app-icon.png", 'rb').read())
         window = sg.Window(
             'Assessment Toolkit For Safe Self Driving Cars', 
             layout, 

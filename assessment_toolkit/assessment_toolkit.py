@@ -16,6 +16,7 @@ import multiprocessing
 #from backend.interface import patch_ros as patchros
 ## Backend
 #Import the scenario maker
+
 from bin.scenario import Scenario
 
 ## Frontend
