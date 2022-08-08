@@ -1,7 +1,8 @@
 
-Autonomous Vehicle Assessment Toolkit
-=====================================
+Assessment Toolkit for Safe Self-Driving Cars
+=============================================
 
+# Machine Specs
 ## Recommended system
 
 * Intel i7 gen 9th - 11th / Intel i9 gen 9th - 11th / AMD ryzen 7 / AMD ryzen 9
@@ -17,6 +18,17 @@ Autonomous Vehicle Assessment Toolkit
 * carla-simulator 0.9.11 (https://github.com/carla-simulator/carla)
 * carla-autoware 0.9.11 (https://github.com/Kailthen/carla-autoware)
 * PySimpleGUI (https://pypi.org/project/PySimpleGUI)
+
+
+# Tool-kit Setup
+## 1.1 Install PySimpleGUI
+```sh
+pip install PySimpleGUI
+```
+## 1.2 Setup BASH Environment
+```sh
+echo "export TOOLKIT_ROOT=~/toolkit" >> ~/.bashrc
+```
 
 # Environment Setup
 ## 1. Install Requirements
@@ -74,31 +86,25 @@ cd /opt/carla-simulator # Open the folder where CARLA is installed
 
 ```sh 
 git clone --recurse-submodules https://github.com/Kailthen/carla-autoware.git
-patch ~/carla-autoware/Dockerfile ~/carla-autoware/update_Dockerfile.patch
+patch ~/carla-autoware/Dockerfile $TOOLKIT_ROOT/etc/update_Dockerfile.patch
 cd carla-autoware && sudo ./build.sh
-patch ~/carla-autoware/run.sh ~/carla-autoware/update_run.sh.patch
+patch ~/carla-autoware/run.sh $TOOLKIT_ROOT/etc/update_run.sh.patch
 ```
-# Tool-kit Setup
-## 1. Install PySimpleGUI
+
+### 1.6 Setup BASH Environment
 ```sh
-pip install PySimpleGUI
+echo "export CARLA_AUTOWARE_ROOT=~/carla-autoware" >> ~/.bashrc
+echo "export CARLA_AUTOWARE_CONTENTS=~/carla-autoware/autoware-contents" >> ~/.bashrc
+echo "export CARLA_SIM=/opt/carla-simulator" >> ~/.bashrc
 ```
 
-## 2. Edit assessment_toolkit/config.json 
-
-```json
-{
-    "CARLA_SIMULATOR_PATH":"/home/riley/Desktop/CARLA_0.9.11/", 
-    "CARLA_AUTOWARE_PATH":"/home/riley/Desktop/carla-autoware/"
-}
-```
-
+# Toolkit Commands
 ## Usage
-1. Start Toolkit 
+### 1. Start Toolkit 
 ```sh
-python assessment_toolkit/assessment_toolkit.py
+cd toolkit/assessment_toolkit
+python3 assessment_toolkit.py
 ```
-
 
 ## Creating New Scenarios 
 
@@ -127,4 +133,3 @@ results_toolkit/frontend/front_end_main.py
 
 results_toolkit/frontend/views.py 
 - view_container()
-
