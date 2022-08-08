@@ -301,3 +301,10 @@ class ScenarioFollowVehicle:
         results_file_path = CWD + "/backend/scenario/results/"+results_file_name+".txt"
         stats_recorder = StatsRecorder(world, self.RUNNING_TIME)
         stats_recorder.record_stats('ego_vehicle', 'stationary_vehicle', results_file_path)
+
+
+    def run_patch(self):
+        subprocess.Popen("docker ps | grep -Eo '([0-9]|[a-z]){12}' | xargs -I %% docker cp $TOOLKIT_ROOT/scenarios/follow_vehicle/etc/follow_vehicle.sh %%:/home/autoware/Documents", stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+        subprocess.Popen("docker ps | grep -Eo '([0-9]|[a-z]){12}' | xargs -I %% docker exec --user autoware -i %% bash /home/autoware/Documents/follow_vehicle.sh", stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+        subprocess.Popen("docker ps | grep -Eo '([0-9]|[a-z]){12}' | xargs -I %% docker exec %% chmod +x /home/autoware/Documents/follow_vehicle.sh", stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+        subprocess.Popen("docker ps | grep -Eo '([0-9]|[a-z]){12}' | xargs -I %% docker exec --user autoware -i %% /home/autoware/Documents/follow_vehicle.sh", stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)

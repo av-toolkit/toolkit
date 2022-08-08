@@ -13,4 +13,4 @@ import subprocess
 class CarlaAutowarePatch:
 
     def start(self):
-        subprocess.Popen("/home/$(whoami)/Tool-kit/assessment_toolkit/ros_patch/setup_carla_autoware_docker_container.sh", stdout=subprocess.PIPE, shell=True)         
+        subprocess.Popen("$TOOLKIT_ROOT/assessment_toolkit/etc/carla_autoware_patch.sh", stdout=subprocess.PIPE, shell=True)         
