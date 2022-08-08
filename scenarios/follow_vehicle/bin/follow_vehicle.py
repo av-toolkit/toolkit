@@ -14,7 +14,7 @@ CWD = os.getcwd()
 
 
 try:
-    sys.path.append(glob.glob('CARLA_ROOT/PythonAPI/carla/dist/carla-*%d.%d-%s.egg' % (
+    sys.path.append(glob.glob('$CARLA_ROOT/PythonAPI/carla/dist/carla-*%d.%d-%s.egg' % (
         sys.version_info.major,
         sys.version_info.minor,
         'win-amd64' if os.name == 'nt' else 'linux-x86_64'))[0])
@@ -76,7 +76,7 @@ class ScenarioFollowVehicle:
     ego_vehicle = None
 
     #Metamorphic Tests
-    metamorphic_test_target_file = open(CWD + "/backend/scenario/metamorphic_tests/follow_vehicle.json")
+    metamorphic_test_target_file = open("$TOOLKIT_ROOT/scenarios/follow_vehicle/etc/follow_vehicle.json")
     metamorphic_tests = json.loads(metamorphic_test_target_file.read())
     metamorphic_test_running = False
 
