@@ -16,13 +16,11 @@ import multiprocessing
 #from backend.interface import patch_ros as patchros
 ## Backend
 #Import the scenario maker
-from backend.scenario.scenario import Scenario
-#Import the process data
-from backend.util.results.process_results import ProcessResult
+from bin.scenario import Scenario
 
 ## Frontend
 #Import the front end
-from frontend.front_end_main import FrontEndMain
+from bin.front_end_main import FrontEndMain
 
 class AssessmentToolkit:
 
