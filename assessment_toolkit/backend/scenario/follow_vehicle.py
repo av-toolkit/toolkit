@@ -37,10 +37,10 @@ from ..util.util import *
 class ScenarioFollowVehicle:
 
     scenario_finished = False
-    # X = -2.1
-    # Y = 120
-    X = 339
-    Y = 240
+    #338.761,-320.678,0.2
+    #1.58954,0,0
+    X = 338.761
+    Y = 300.678
     Z = 0.2
 
     PITCH = 0
@@ -51,13 +51,13 @@ class ScenarioFollowVehicle:
     EGO_VEHICLE_NAME = 'ego_vehicle'
 
     TRIGGER_DIST = 30
-    VEHICLE_MODEL = 'vehicle.toyota.prius'
+    VEHICLE_MODEL = 'vehicle.tesla.model3'
 
     #Setup the spectator camera
 
     SPEC_CAM_X = 340
     SPEC_CAM_Y = 240
-    SPEC_CAM_Z = 120
+    SPEC_CAM_Z = 100
     SPEC_CAM_PITCH = -90
     SPEC_CAM_YAW = 0
     SPEC_CAM_ROLL = 0 
@@ -180,17 +180,17 @@ class ScenarioFollowVehicle:
 
             current_velocity = self.LEAD_VEHICLE_VELOCITY 
             #Speed up the vehicle at y 200 
-            lead_vehicle_target_stop_y = 220
+            lead_vehicle_target_stop_y = 260
             while(lead_vehicle.get_location().y > lead_vehicle_target_stop_y):
                 print(lead_vehicle.get_location().y)
-            while current_velocity < 6:
-                current_velocity+=0.01
+            while current_velocity < 10:
+                current_velocity+=0.02
                 lead_vehicle.set_target_velocity(carla.Vector3D(0,-current_velocity,0))
 
 
 
             #Slow down the vehicle at y 150
-            lead_vehicle_target_stop_y = 200
+            lead_vehicle_target_stop_y = 260
             while(lead_vehicle.get_location().y > lead_vehicle_target_stop_y):
                 pass
          

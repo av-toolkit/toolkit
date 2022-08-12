@@ -18,38 +18,27 @@ import carla
 class ScenarioFollowVehicle:
 
     scenario_finished = False
-    # X = -2.1
-    # Y = 120
-    X = 339
-    Y = 240
+    #338.761,-320.678,0.2
+    #1.58954,0,0
+    X = 338.761
+    Y = -310.678
     Z = 0.2
-
     PITCH = 0
-    YAW = 270
-    #YAW = 270
+    YAW = 1.58954
     ROLL = 0 
-
     EGO_VEHICLE_NAME = 'ego_vehicle'
-
     TRIGGER_DIST = 50
     VEHICLE_MODEL = 'vehicle.toyota.prius'
-
     #Setup the spectator camera
-
     SPEC_CAM_X = 340
     SPEC_CAM_Y = 240
     SPEC_CAM_Z = 120
     SPEC_CAM_PITCH = -90
     SPEC_CAM_YAW = 0
     SPEC_CAM_ROLL = 0 
-
-
     SPAWNED_VEHICLE_ROLENAME = 'stationary_vehicle'
-
     # LEAD_VEHICLE_VELOCITY = 3
-    LEAD_VEHICLE_VELOCITY = 6
-
-    
+    LEAD_VEHICLE_VELOCITY = 20
     #How long the scenario actually should run once recording is triggered. 
     RUNNING_TIME = 30
 
@@ -60,17 +49,13 @@ class ScenarioFollowVehicle:
             client.set_timeout(2.0)
 
             world = client.load_world('Town01')
+            carla.LaneChange("Both")
             self.destroy_all_vehicle_actors(world)
             spectator = world.get_spectator()
             spectator.set_transform(carla.Transform(carla.Location(self.SPEC_CAM_X, self.SPEC_CAM_Y,self.SPEC_CAM_Z),
             carla.Rotation(self.SPEC_CAM_PITCH,self.SPEC_CAM_YAW,self.SPEC_CAM_ROLL)))
-
-
-
-
         
             blueprint_library = world.get_blueprint_library()
-
 
             #Lead Vehicle
             lead_vehicle_bp = next(bp for bp in blueprint_library if bp.id == self.VEHICLE_MODEL)
@@ -107,7 +92,7 @@ class ScenarioFollowVehicle:
             npm_y_value = 150
             for vehicle in range(number_of_other_vehicles):
                 npc_vehicle_blueprint = next(bp for bp in blueprint_library if bp.id == self.VEHICLE_MODEL)
-                spawn_loc = carla.Location(335, npm_y_value,self.Z)
+                spawn_loc = carla.Location(320, npm_y_value,self.Z)
                 rotation = carla.Rotation(self.PITCH,90,self.ROLL)
                 transform = carla.Transform(spawn_loc, rotation)
                 npm_y_value-=20; 
@@ -127,7 +112,7 @@ class ScenarioFollowVehicle:
 
 
             #Slow down the vehicle at y 150
-            lead_vehicle_target_stop_y = 200
+            lead_vehicle_target_stop_y = 150
             while(lead_vehicle.get_location().y > lead_vehicle_target_stop_y):
                 pass
          
@@ -137,7 +122,7 @@ class ScenarioFollowVehicle:
 
             
             #Slow down to stop the vehicle at y 100
-            lead_vehicle_target_stop_y = 180
+            lead_vehicle_target_stop_y = 100
             while(lead_vehicle.get_location().y > lead_vehicle_target_stop_y):
                 pass
          

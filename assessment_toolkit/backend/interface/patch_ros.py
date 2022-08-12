@@ -1,5 +1,6 @@
 import os
 import json
+import subprocess
 
 
 
@@ -18,6 +19,7 @@ class PatchRos:
         # self.__rospatch__ = os.system("gnome-terminal -e 'bash -c \"" + script_path +" -s; exec bash\"'")
 
         self.__rospatch__ = os.system("gnome-terminal -e 'bash -c \"" + script_path +" -s;\"'")
+        #subprocess.Popen("docker ps | grep -Eo '([0-9]|[a-z]){12}' | xargs -I %% docker exec --user autoware --env-file='$TOOLKIT_ROOT/assessment_toolkit/etc/env-list' %% roslaunch carla_autoware_agent carla_autoware_agent.launch town:=Town01", stdout=subprocess.PIPE, shell=True)
     
     def apply_ros_patch(self):
         self.setup_patch_files()
@@ -38,10 +40,10 @@ class PatchRos:
     
         
         for line in ros_patch_lines:
-            if line_number == 18:
-                line = "docker ps | grep -Eo '([0-9]|[a-z]){12}' | xargs -I %% docker cp "+ self.directory +"/ros_patch/patch_files/update_vehicle_model.launch.patch %%:/home/autoware/Documents\n"
-            if line_number == 26:
-                line = "docker ps | grep -Eo '([0-9]|[a-z]){12}' | xargs -I %% docker cp "+ self.directory +"/ros_patch/patch_files/update_my_mission_planning.patch %%:/home/autoware/Documents\n"
+            #if line_number == 18:
+                #line = "docker ps | grep -Eo '([0-9]|[a-z]){12}' | xargs -I %% docker cp "+ self.directory +"/ros_patch/patch_files/update_vehicle_model.launch.patch %%:/home/autoware/Documents\n"
+            #if line_number == 26:
+                #line = "docker ps | grep -Eo '([0-9]|[a-z]){12}' | xargs -I %% docker cp "+ self.directory +"/ros_patch/patch_files/update_my_mission_planning.patch %%:/home/autoware/Documents\n"
             if line_number == 34:
                 # OLD General 2dnav 2dpose patch file that is setup for the first scenario 
                 #line = "docker ps | grep -Eo '([0-9]|[a-z]){12}' | xargs -I %% docker cp "+ self.directory +"/ros_patch/create_ego_car_csv.sh %%:/home/autoware/Documents\n"
@@ -54,7 +56,7 @@ class PatchRos:
             if line_number == 43: 
                 line = "docker ps | grep -Eo '([0-9]|[a-z]){12}' | xargs -I %% docker exec --user autoware -i %% /home/autoware/Documents/" + scenario + ".sh\n"
             if line_number == 46:
-                line = "docker ps | grep -Eo '([0-9]|[a-z]){12}' | xargs -I %% docker cp "+ self.directory +"/ros_patch/run-simulation.bash %%:/home/autoware/Documents\n"
+                line = "docker ps | grep -Eo '([0-9]|[a-z]){12}' | xargs -I %% docker cp "+ self.directory +"/ros_patch/run.sh %%:/home/autoware\n"
             ros_patch_new.write(line)
             line_number+=1
         
@@ -62,11 +64,11 @@ class PatchRos:
         
         
         #Adjust the run-simulation.bash 
-        run_simulation_bash = open(self.directory+'/ros_patch/run-simulation.bash')
+        run_simulation_bash = open(self.directory+'/ros_patch/run.sh')
         run_simulation_bash_lines = run_simulation_bash.readlines()
         run_simulation_bash.close()
 
-        run_simulation_new = open(self.directory+'/ros_patch/run-simulation.bash', 'w')
+        run_simulation_new = open(self.directory+'/ros_patch/run.sh', 'w')
         line_number = 1
         for line in run_simulation_bash_lines:
             print("READLINE LINE " + line)
