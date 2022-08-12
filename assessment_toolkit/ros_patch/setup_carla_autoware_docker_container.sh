@@ -49,7 +49,7 @@ docker ps | grep -Eo '([0-9]|[a-z]){12}' | xargs -I %% docker cp /home/bitcoin/A
 docker ps | grep -Eo '([0-9]|[a-z]){12}' | xargs -I %% docker exec %% chmod +x /home/autoware/run.sh
 #sleep 0s  # Waits 5 seconds.
 # RUN THE ROSLAUNCH SCRIPT
-docker ps | grep -Eo '([0-9]|[a-z]){12}' | xargs -I %% docker exec --user autoware -i %% bash /home/autoware/run.sh
+docker ps | grep -Eo '([0-9]|[a-z]){12}' | xargs -I %% docker exec --user autoware subprocess.Popen("docker ps | grep -Eo '([0-9]|[a-z]){12}' | xargs -I %% docker exec --user autoware --env-file='$TOOLKIT_ROOT/env-list' -i %% bash /home/autoware/run.sh
 
 printf "\n\n███████╗██╗███╗░░██╗██╗░██████╗██╗░░██╗███████╗██████╗░\n██╔════╝██║████╗░██║██║██╔════╝██║░░██║██╔════╝██╔══██╗\n█████╗░░██║██╔██╗██║██║╚█████╗░███████║█████╗░░██║░░██║\n██╔══╝░░██║██║╚████║██║░╚═══██╗██╔══██║██╔══╝░░██║░░██║\n██║░░░░░██║██║░╚███║██║██████╔╝██║░░██║███████╗██████╔╝\n╚═╝░░░░░╚═╝╚═╝░░╚══╝╚═╝╚═════╝░╚═╝░░╚═╝╚══════╝╚═════╝░\n"
 
