@@ -1,27 +1,32 @@
 #from subprocess import call
- 
 import os
 import threading
+import json
 import time
 import sys
 import multiprocessing
+from unittest import case
 
 #Import CarlaLaunch
-#from backend.interface import carla_simulator
+from backend.interface import carla_launch as claunch
 #Import ROSLaunch
-#from backend.interface import carla_autoware
+from backend.interface import ros_launch as rlaunch
 #Import ROSClose 
-#from backend.interface import ros_close as rclose
+from backend.interface import ros_close as rclose
 #Import ROSPatch
-#from backend.interface import patch_ros as patchros
+from backend.interface import patch_ros as patchros
 ## Backend
 #Import the scenario maker
-
-from bin.scenario import Scenario
+from backend.scenario.scenario_manager import ScenarioManager
+#Import the process data
+from backend.util.results.process_results import ProcessResult
 
 ## Frontend
 #Import the front end
-from bin.front_end_main import FrontEndMain
+from frontend.front_end_main import FrontEndMain
+CONFIG = json.load(open('config.json'))
+
+
 
 class AssessmentToolkit:
 
@@ -30,7 +35,7 @@ class AssessmentToolkit:
 
     #Scenarios that are going to be runned during this session. 
     scenario_queue = []
-    setup_controller = {"carla_sim":False, "carla_autoware":False}
+    setup_controller = {"carla":False, "carla_autoware":False}
 
     def __init__(self):
         #Start GUI
@@ -39,6 +44,21 @@ class AssessmentToolkit:
         self.gui = gui
         #start the gui
         self.gui.start()
+  
+
+   
+    def start_carla(self):
+        # Launch CARLA & Sleep for 5 seconds.
+        claunch.CarlaLaunch(CONFIG['CARLA_SIMULATOR_PATH'])
+        time.sleep(1)
+        self.setup_controller["carla"] = True
+
+    def start_carla_autoware(self):
+        # Launch CARLA AUTOWARE/ROS & Sleep for 5 seconds.
+        rlaunch.ROSLaunch(CONFIG['CARLA_AUTOWARE_PATH'])
+        time.sleep(2)
+        self.setup_controller["carla_autoware"] = True 
+
     
     #Setup controller GET from the gui on the view_setup_toolkit 
     def get_setup_controller(self):
@@ -52,22 +72,64 @@ class AssessmentToolkit:
         print("\n\nsetup_scenarios\n")
         for key in data:
                 print(key, ' : ',data[key])
-        
+
         try:
             if data['scenario_check_follow_vehicle'] == True:
-                self.scenario_queue.append(Scenario("follow_vehicle", data))
+                self.scenario_queue.append(ScenarioManager("follow_vehicle", data))
             if data['scenario_check_follow_vehicle0'] == True:
-                self.scenario_queue.append(Scenario("follow_vehicle", data))    
+                self.scenario_queue.append(ScenarioManager("follow_vehicle", data))    
             try:
 
                 if data['scenario_check_pedestrian_crossing'] == True:
-                    self.scenario_queue.append(Scenario("pedestrian_crossing", data))
+                    self.scenario_queue.append(ScenarioManager("pedestrian_crossing", data))
             except: 
                 pass
             try:
                 if data['scenario_check_pedestrian_crossing0'] == True:
-                    self.scenario_queue.append(Scenario("pedestrian_crossing", data))    
+                    self.scenario_queue.append(ScenarioManager("pedestrian_crossing", data))    
             except: 
+                pass
+
+            try:
+
+                if data['scenario_check_pedestrian_crossing_prior_vehicle_manouver'] == True:
+                    self.scenario_queue.append(ScenarioManager("pedestrian_crossing_prior_vehicle_manouver", data))
+            except: 
+                pass
+            try:
+                if data['scenario_check_pedestrian_crossing_prior_vehicle_manouver0'] == True:
+                    self.scenario_queue.append(ScenarioManager("pedestrian_crossing_prior_vehicle_manouver", data))    
+            except: 
+                pass
+
+
+            try:
+
+                if data['scenario_check_follow_vehicle_town3'] == True:
+                    
+                    self.scenario_queue.append(ScenarioManager("follow_vehicle_town3", data))
+            except: 
+                pass
+
+            try:
+                if data['scenario_check_follow_vehicle_town30'] == True:
+                    self.scenario_queue.append(ScenarioManager("follow_vehicle_town3", data))    
+            except: 
+                pass
+
+            try:
+                if data['scenario_check_red_light'] == True:
+                    self.scenario_queue.append(ScenarioManager("red_light", data))
+                if data['scenario_check_red_light0'] == True:
+                    self.scenario_queue.append(ScenarioManager("red_light", data))
+            except:
+                pass
+            try:
+                if data['scenario_check_intersection_left_turn'] == True:
+                    self.scenario_queue.append(ScenarioManager("intersection_left_turn", data))
+                if data['scenario_check_intersection_left_turn0'] == True:
+                    self.scenario_queue.append(ScenarioManager("intersection_left_turn", data))
+            except:
                 pass
             # if data['scenario_check_pedestrian_crossing_road'] == True:
             #     self.scenario_queue.append()
@@ -78,6 +140,7 @@ class AssessmentToolkit:
                 print("NO SCENARIO QUEUE SET ::: ")
                 self.gui.change_view("view_setup_scenarios_none")
                 return 0
+
 
             #Setup the current scenario
             self.current_scenario = self.scenario_queue[0]
@@ -160,6 +223,7 @@ class AssessmentToolkit:
     #Run the ros patch
     #Only is going to be successful if the docker is run. 
     def run_ros_patch(self):
+        print("run_ros_patch :: "+ self.get_current_scenario_name())
         patchros.PatchRos(self.get_current_scenario_name())        
 
     
